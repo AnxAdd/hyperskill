@@ -1,0 +1,225 @@
+package tictactoe;
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class Main {
+        public static void main(String[] args) {
+        // write your code here
+        boolean xWins = false; //Флажки состояния игры
+        boolean oWins = false;
+        boolean tie = false;
+        boolean impos = false;
+        boolean gameOver = false;
+        boolean xIsInt = false;
+        boolean yIsInt = false;
+        boolean dataOk = false;
+        boolean inputIsInt = true;
+        Scanner scan = new Scanner(System.in);
+        int x = 0;
+        int moveCount = 1;
+        int xCoord = 0;
+        int yCoord = 0;
+        int xRow = 0;
+        int oRow = 0;
+        int[][] posNum = new int[3][3]; //Массив хранит примитивы, соответствующие знакам X = 1, O = 2.
+        int xCount = 0; // счетчики для числа одновременных х и о на поле
+        int oCount = 0;
+        char[][] table = new char[3][3];
+        /*System.out.print("Enter cells: ");
+        String str1 = scan.nextLine();
+        str1 = str1.replace(" ", "");*/
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                table[i][j] = '_';
+            }
+        }
+
+                /*for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        table[i][j] = str1.charAt(x);
+                        ++x;
+                        if (table[i][j] == 'X') {
+                            ++xCount;
+                            posNum[i][j] = 1;
+                        } else if (table[i][j] == 'O') {
+                            ++oCount;
+                            posNum[i][j] = 2;
+                        } else {
+                            posNum[i][j] = 0;
+                            continue;
+                        }
+
+                    }
+                }*/
+        /*System.out.println("---------");
+        for (int i = 0; i < 3; ++i) {
+            System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+        }
+        System.out.println("---------");*/
+
+        // Цикл работает пока пользователь не введет приемлимые координаты следующего хода
+        while (!gameOver) {
+            System.out.println("---------");
+            for (int i = 0; i < 3; ++i) {
+                System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+            }
+            System.out.println("---------");
+            System.out.println("Enter the coordinates: ");
+            String input = scan.nextLine();
+            input = input.replace(" ", "");
+            char xAsChar = input.charAt(0);
+            char yAsChar = input.charAt(1);
+            String xAsString = Character.toString(xAsChar);
+            String yAsString = Character.toString(yAsChar);
+            xIsInt = Character.isDigit(xAsChar); //проверяет что введенные координаты являются целочисленными
+            yIsInt = Character.isDigit(yAsChar); //проверяет что введенные координаты являются целочисленными
+
+            /*if (inputIsInt || scan.hasNextInt()) {
+                //xCoord = scan.nextInt();
+                if (xCoord >= 0 && xCoord <= Integer.MAX_VALUE) {
+                    xIsInt = true;
+                } else {
+                }
+                //yCoord = scan.nextInt();
+                if (yCoord >= 0 && xCoord <= Integer.MAX_VALUE) {
+                    yIsInt = true;
+                } else {
+                }
+            } else {
+                System.out.println("You should enter numbers!");
+                continue;
+            }*/
+            if (xIsInt && yIsInt) {
+                xCoord = Integer.parseInt(xAsString);
+                yCoord = Integer.parseInt(yAsString);
+                if (xCoord < 1 || xCoord > 3 || yCoord < 1 || yCoord > 3) {
+                    System.out.println("Coordinates should be from 1 to 3!");
+                } else {
+                    if (posNum[xCoord - 1][yCoord - 1] != 0) {
+                        System.out.println("This cell is occupied! Choose another one!");
+                    } else {
+                        if (moveCount % 2 == 0) {
+                            table[xCoord - 1][yCoord - 1] = 'O';
+                            posNum[xCoord - 1][yCoord - 1] = 2;
+                            ++moveCount;
+                            dataOk = true;
+                        } else {
+                            table[xCoord - 1][yCoord - 1] = 'X';
+                            posNum[xCoord - 1][yCoord - 1] = 1;
+                            ++moveCount;
+                            dataOk = true;
+                        }
+                    }
+                }
+            } else {
+                System.out.println("You should enter numbers!");
+            }
+
+
+                /*System.out.println("---------");
+                for (int i = 0; i < 3; ++i) {
+                    System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+                }
+                System.out.println("---------");*/
+
+        /*if (Math.abs(xCount - oCount) > 1) { // проверка кол-ва фигур
+            impos = true;
+        } else if (xCount + oCount == 9) {
+            gameOver = true;
+        }*/
+
+            //Проверка одинаковости клеток по горизонтали
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    if (posNum[i][j] == 1) {
+                        ++xRow;
+                    } else if (posNum[i][j] == 2) {
+                        ++oRow;
+                    } else {
+                        continue;
+                    }
+
+                }
+                if (xRow == 3) {
+                    xWins = true;
+                    gameOver = true;
+                } else if (oRow == 3) {
+                    oWins = true;
+                    gameOver = true;
+                } else if (xRow == 3 && oWins || oRow == 3 && xWins) {
+                    impos = true;
+                }
+                xRow = 0;
+                oRow = 0;
+            }
+            // Проверка по вертикали
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    if (posNum[j][i] == 1) {
+                        ++xRow;
+                    } else if (posNum[j][i] == 2) {
+                        ++oRow;
+                    } else {
+                        continue;
+                    }
+
+                }
+                if (xRow == 3) {
+                    xWins = true;
+                    gameOver = true;
+                } else if (oRow == 3) {
+                    oWins = true;
+                    gameOver = true;
+                } else if (xRow == 3 && oWins || oRow == 3 && xWins) {
+                    impos = true;
+                }
+                xRow = 0;
+                oRow = 0;
+            }
+            if ((posNum[1][1] == posNum[2][2] && posNum[1][1] == posNum[0][0]) || (posNum[1][1] == posNum[0][2] && posNum[1][1] == posNum[2][0])) {
+                if (posNum[1][1] == 1) {
+                    xWins = true;
+                    gameOver = true;
+                } else if (posNum[1][1] == 2) {
+                    oWins = true;
+                    gameOver = true;
+                }
+            }
+
+            if (xWins && oWins) {
+                impos = true;
+            }
+            // Проверки флажков
+            if (!impos) {
+                if (xWins) {
+                    System.out.println("---------");
+                    for (int i = 0; i < 3; ++i) {
+                        System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+                    }
+                    System.out.println("---------");
+                    System.out.println("X wins");
+                    break;
+                } else if (oWins) {
+                    System.out.println("---------");
+                    for (int i = 0; i < 3; ++i) {
+                        System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+                    }
+                    System.out.println("---------");
+                    System.out.println("O wins");
+                    break;
+                } else if (moveCount == 10) {
+                    System.out.println("---------");
+                    for (int i = 0; i < 3; ++i) {
+                        System.out.println("| " + table[i][0] + " " + table[i][1] + " " + table[i][2] + " |");
+                    }
+                    System.out.println("---------");
+                    System.out.println("Draw");
+                    break;
+                }
+            } else if (impos) {
+                System.out.println("Impossible");
+            }
+        }
+
+    }
+}
